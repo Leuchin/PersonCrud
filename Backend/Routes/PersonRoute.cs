@@ -22,7 +22,7 @@ public static class PersonRoute{
             var Persons = await context.Persons.ToListAsync();
             return Results.Ok(Persons);
        });
-         //Get da pessoa por Id
+         //Put da pessoa por Id
         routes.MapPut("{id:guid}", 
         async (Guid id, PersonRequest req, PersonContext context) =>
         {
@@ -33,6 +33,7 @@ public static class PersonRoute{
             }
             person.ChangeName(req.Name);
             await context.SaveChangesAsync();
+
             return Results.Ok(person);
         });
     }

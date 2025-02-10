@@ -3149,11 +3149,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\leuch\\OneDrive\\Documentos\\tutorial crud\\PersonCRUD\\PersonCRUD.csproj",
+      "projectUniqueName": "C:\\Users\\leuch\\OneDrive\\Documentos\\tutorial crud\\PersonCRUD\\Backend\\PersonCRUD.csproj",
       "projectName": "PersonCRUD",
-      "projectPath": "C:\\Users\\leuch\\OneDrive\\Documentos\\tutorial crud\\PersonCRUD\\PersonCRUD.csproj",
+      "projectPath": "C:\\Users\\leuch\\OneDrive\\Documentos\\tutorial crud\\PersonCRUD\\Backend\\PersonCRUD.csproj",
       "packagesPath": "C:\\Users\\leuch\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\leuch\\OneDrive\\Documentos\\tutorial crud\\PersonCRUD\\obj\\",
+      "outputPath": "C:\\Users\\leuch\\OneDrive\\Documentos\\tutorial crud\\PersonCRUD\\Backend\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\leuch\\AppData\\Roaming\\NuGet\\NuGet.Config"

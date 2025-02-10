@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "xydaue+Pw30=",
+  "dgSpecHash": "GQ5C3II/h4c=",
   "success": true,
-  "projectFilePath": "C:\\Users\\leuch\\OneDrive\\Documentos\\tutorial crud\\PersonCRUD\\PersonCRUD.csproj",
+  "projectFilePath": "C:\\Users\\leuch\\OneDrive\\Documentos\\tutorial crud\\PersonCRUD\\Backend\\PersonCRUD.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\leuch\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\leuch\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.1\\microsoft.aspnetcore.openapi.9.0.1.nupkg.sha512",
