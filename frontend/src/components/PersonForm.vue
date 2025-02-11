@@ -1,0 +1,167 @@
+<template>
+    <div class="Person-Container">
+        <h2>{{ isEditMode ? 'Editar Pessoa' : 'Nova Pessoa' }}</h2>
+        <form @submit.prevent="handleSubmit">
+            <div class="form-group">
+                <label for="name">Nome</label>
+                <input 
+                type="text" 
+                id="name" 
+                v-model="PersonData.name" 
+                class="form-control" 
+                required
+                />
+            </div>
+            
+        </form>
+    </div>
+</template>
+<script lang="ts">
+import { defineComponent, type PropType } from 'vue';
+import api from '../services/api.ts';
+import type { PersonItem } from '../models/PersonItem.ts';
+
+export default defineComponent({
+  name: 'PersonForm',
+  props: {
+    taskToEdit: {
+      type: Object as PropType<PersonItem| null>,
+      default: null,
+    },
+  },
+  emits: ['refresh-list'],
+  data() {
+    return {
+      isEditMode: false,
+      PersonData: {
+        name: '',
+        age: 0,
+        Biography: '',
+      } as PersonItem,
+    };
+  },
+  watch: {
+    taskToEdit: {
+      immediate: true,
+      handler(newVal: PersonItem | null) {
+        if (newVal) {
+          this.isEditMode = true;
+          this.PersonData = { ...newVal };
+        } else {
+          this.isEditMode = false;
+          this.clearForm();
+        }
+      },
+    },
+  },
+  methods: {
+    clearForm() {
+      this.isEditMode = false;
+      this.PersonData = {
+        name: '',
+        age: 0,
+        biography: '',
+      };
+    },
+
+    async handleSubmit() {
+      try {
+        if (this.isEditMode && this.PersonData.id) {
+          // PUT: atualizar tarefa
+          await api.put(`/tasks/${this.PersonData.id}`, this.PersonData);
+          alert('Tarefa atualizada com sucesso!');
+        } else {
+          // POST: criar nova tarefa
+          // -> TimerStart em UTC (com 'Z')
+          const nowUtcIso = new Date().toISOString();
+
+          const newPerson = {
+            ...this.PersonData,
+            timerStart: nowUtcIso
+          };
+
+          await api.post('/person', newPerson);
+          alert('Tarefa criada com sucesso!');
+        }
+
+        this.$emit('refresh-list');
+        this.clearForm();
+      } catch (error) {
+        console.error('Erro ao enviar tarefa:', error);
+        alert('Falha ao enviar tarefa. Verifique se o backend está rodando e se o modelo está correto.');
+      }
+    },
+  },
+});
+</script>
+
+<style scoped>
+.Person-Container {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 16px 20px;
+  margin-bottom: 30px;
+  background: #fefefe;
+}
+
+h2 {
+  margin-bottom: 20px;
+  font-size: 1.4rem;
+  color: #0066cc;
+}
+
+.form-group {
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+.form-group input[type="text"],
+.form-group textarea,
+.form-group select,
+.form-group input[type="number"] {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 8px;
+  font-size: 0.95rem;
+}
+
+.buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.btn {
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn.primary {
+  background-color: #0066cc;
+  color: #fff;
+}
+
+.btn.primary:hover {
+  background-color: #005bb5;
+}
+
+.btn.secondary {
+  background-color: #f2f2f2;
+  color: #333;
+}
+
+.btn.secondary:hover {
+  background-color: #e2e2e2;
+}
+</style>

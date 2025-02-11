@@ -8,7 +8,7 @@
     import { defineComponent } from 'vue';
     import logo from '../assets/logo.png';  // importa a imagem logo.png
     export default defineComponent({
-        name: 'Navbar'
+        name: 'Navbar',
         data() {
             return {
                 logo
