@@ -1,19 +1,47 @@
 <template>
     <div class="Person-Container">
         <h2>{{ isEditMode ? 'Editar Pessoa' : 'Nova Pessoa' }}</h2>
-        <form @submit.prevent="handleSubmit">
-            <div class="form-group">
-                <label for="name">Nome</label>
-                <input 
-                type="text" 
-                id="name" 
-                v-model="PersonData.name" 
-                class="form-control" 
-                required
-                />
-            </div>
-            
-        </form>
+            <form @submit.prevent="handleSubmit">
+                <div class="form-group">
+                    <label for="name">Nome</label>
+                        <input 
+                        type="text" 
+                        id="name" 
+                        v-model="PersonData.name" 
+                        required
+                        />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="age">Idade</label>
+                        <input 
+                        type="number" 
+                        id="age" 
+                        v-model="PersonData.age" 
+                       required
+                        />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="biography">Biografia</label>
+                        <textarea 
+                        id="biography" 
+                        v-model="PersonData.biography" 
+                        required
+                        ></textarea>
+                    </div>
+
+                    <div class="buttons">
+                        <button type="submit" class="btn primary">
+                            {{ isEditMode ? 'Atualizar' : 'Criar' }}
+                        </button>
+                        <button type="button" class="btn secondary" @click="clearForm">
+                            Limpar
+                        </button>
+                    </div>
+                    
+                </form>           
+        
     </div>
 </template>
 <script lang="ts">
@@ -24,7 +52,7 @@ import type { PersonItem } from '../models/PersonItem.ts';
 export default defineComponent({
   name: 'PersonForm',
   props: {
-    taskToEdit: {
+    pesonToEdit: {
       type: Object as PropType<PersonItem| null>,
       default: null,
     },
@@ -41,7 +69,7 @@ export default defineComponent({
     };
   },
   watch: {
-    taskToEdit: {
+    personToEdit: {
       immediate: true,
       handler(newVal: PersonItem | null) {
         if (newVal) {
@@ -68,8 +96,8 @@ export default defineComponent({
       try {
         if (this.isEditMode && this.PersonData.id) {
           // PUT: atualizar tarefa
-          await api.put(`/tasks/${this.PersonData.id}`, this.PersonData);
-          alert('Tarefa atualizada com sucesso!');
+          await api.put(`/persons/${this.PersonData.id}`, this.PersonData);
+          alert('Atualização de Pessoa realizada com sucesso!');
         } else {
           // POST: criar nova tarefa
           // -> TimerStart em UTC (com 'Z')
@@ -80,15 +108,15 @@ export default defineComponent({
             timerStart: nowUtcIso
           };
 
-          await api.post('/person', newPerson);
-          alert('Tarefa criada com sucesso!');
+          await api.post('/persons', newPerson);
+          alert('Criação de Pessoa com sucesso!');
         }
 
         this.$emit('refresh-list');
         this.clearForm();
       } catch (error) {
-        console.error('Erro ao enviar tarefa:', error);
-        alert('Falha ao enviar tarefa. Verifique se o backend está rodando e se o modelo está correto.');
+        console.error('Erro ao enviar Pessoa:', error);
+        alert('Falha ao enviar Pessoa. Verifique se o backend está rodando e se o modelo está correto.');
       }
     },
   },
@@ -97,17 +125,17 @@ export default defineComponent({
 
 <style scoped>
 .Person-Container {
-  border: 1px solid #ddd;
+  border: 1px solid #272424;
   border-radius: 5px;
   padding: 16px 20px;
   margin-bottom: 30px;
-  background: #fefefe;
+  background: #272424;
 }
 
 h2 {
   margin-bottom: 20px;
   font-size: 1.4rem;
-  color: #0066cc;
+  color: #84ace9;
 }
 
 .form-group {
@@ -119,7 +147,7 @@ h2 {
 .form-group label {
   font-weight: 600;
   margin-bottom: 6px;
-  color: #333;
+  color: #84ace9;
 }
 
 .form-group input[type="text"],

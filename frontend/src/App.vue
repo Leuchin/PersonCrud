@@ -1,30 +1,62 @@
-<script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+  <!--Navbar-->
+  <Navbar />
+
+  <!--Container-->
+  <div id="app">
+    <h1>Lista de pessoas</h1>
+
+    <PersonForm
+      :personToEdit="personBeingEdited"
+     @refresh-list="refreshPersonList"
+    />
+
+    <PersonList
+      ref="personList"
+      @edit-person="onEditPerson"
+    />
   </div>
-  <HelloWorld msg="Vite + Vue" />
+
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
+<script lang="ts">
+import { defineComponent, ref } from 'vue';
+
+import Navbar from './components/Navbar.vue';
+import PersonForm from './components/PersonForm.vue';
+import PersonList from './components/PersonList.vue';
+import type { PersonItem } from './models/PersonItem.ts';
+
+export default defineComponent({
+  name: 'App',
+  components: {
+    Navbar,
+    PersonForm,
+    PersonList
+  },
+  setup() {
+    const personList = ref<InstanceType<typeof PersonList> | null>(null);
+    const personBeingEdited = ref<PersonItem | null>(null);
+
+    function onEditPerson(person: PersonItem) {
+      personBeingEdited.value = {...person};
+    }
+
+    function refreshPersonList() {
+      if (personList.value) {
+        personList.value.fetchPersons();
+      }
+      personBeingEdited.value = null;
+    }
+
+    return {
+      personBeingEdited,
+      onEditPerson,
+      refreshPersonList,
+    };
+  },
+});
+</script>
+
+<style>
 </style>

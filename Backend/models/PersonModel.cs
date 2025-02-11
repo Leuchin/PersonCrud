@@ -1,5 +1,3 @@
-using System;
-
 namespace Person.Models;
 
 public class PersonModel

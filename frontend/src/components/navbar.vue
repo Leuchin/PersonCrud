@@ -1,20 +1,23 @@
 <template>
-    <nav class = "navbar">
+    <nav class = "Navbar">
         
     </nav>
 </template>
 
 <script lang="ts">
-    import { defineComponent } from 'vue';
-    import logo from '../assets/logo.png';  // importa a imagem logo.png
-    export default defineComponent({
-        name: 'Navbar',
-        data() {
-            return {
-                logo
-            }
-        }
-    })
+
+import { defineComponent } from 'vue';
+import logo from '../assets/logo.png';
+
+export default defineComponent({
+  name: 'Navbar',
+  data() {
+    return {
+      logo
+    };
+  }
+});
+
 </script>
 
 <style scoped>
