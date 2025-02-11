@@ -6,8 +6,9 @@ using Person.Models;
 
 namespace Person.controller
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
+    
     public class PersonController : ControllerBase
     {
         private readonly PersonContext _context;
