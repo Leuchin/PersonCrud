@@ -1,6 +1,6 @@
 <template>
   <div class="person-form-card">
-    <h2>{{ isEditMode ? 'Editar Pessoa' : 'Nova Pessoa' }}</h2>
+    <h2>{{ isEditMode ? 'Editar Pessoa' : 'Novas Pessoa' }}</h2>
 
     <form @submit.prevent="handleSubmit">
       <div class="form-group">
@@ -52,10 +52,14 @@ import { defineComponent, PropType, watch } from 'vue';
 import api from '../services/api.ts';
 import type { PersonItem } from '../models/PersonItem.ts';
 
+// Importa o SweetAlert2
+import Swal from 'sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
+
 export default defineComponent({
   name: 'PersonForm',
   props: {
-    // Se quiser editar uma pessoa existente, passe por aqui
+    // Recebe a pessoa a editar, se houver
     personToEdit: {
       type: Object as PropType<PersonItem | null>,
       default: null,
@@ -73,7 +77,7 @@ export default defineComponent({
     };
   },
   watch: {
-    // Sempre que 'personToEdit' mudar, atualize o formulário
+    // Se 'personToEdit' vier com um id, entramos em modo edição
     personToEdit: {
       immediate: true,
       handler(newVal: PersonItem | null) {
@@ -98,31 +102,72 @@ export default defineComponent({
     },
 
     async handleSubmit() {
+      // Define se é criação ou edição
+      const operation = this.isEditMode ? 'editar' : 'criar';
+      const confirmText = this.isEditMode ? 'Sim, atualizar!' : 'Sim, criar!';
+
+      // Pede confirmação com SweetAlert2
+      const result = await Swal.fire({
+        title: `Confirmar ${operation}?`,
+        text: `Deseja realmente ${operation} esta pessoa?`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#007bff',  // Azul
+        cancelButtonColor: '#868e96',   // Cinza
+        confirmButtonText: confirmText,
+        cancelButtonText: 'Cancelar',
+      });
+
+      if (!result.isConfirmed) {
+        // Usuário cancelou
+        return;
+      }
+
       try {
         if (this.isEditMode && this.personData.id) {
           // PUT: atualizar
           await api.put(`/persons/${this.personData.id}`, this.personData);
-          alert('Pessoa atualizada com sucesso!');
+
+          // Alerta de sucesso
+          Swal.fire({
+            icon: 'success',
+            title: 'Sucesso!',
+            text: 'Pessoa atualizada com sucesso!',
+            timer: 2000,
+            timerProgressBar: true,
+            showConfirmButton: false,
+          });
         } else {
           // POST: criar nova
           const nowUtcIso = new Date().toISOString();
           const newPerson = {
             ...this.personData,
-            timerStart: nowUtcIso, // se quiser um campo de data
+            timerStart: nowUtcIso, // se precisar de data
           };
-
           await api.post('/persons', newPerson);
-          alert('Pessoa criada com sucesso!');
+
+          Swal.fire({
+            icon: 'success',
+            title: 'Sucesso!',
+            text: 'Pessoa criada com sucesso!',
+            timer: 2000,
+            timerProgressBar: true,
+            showConfirmButton: false,
+          });
         }
 
-        // Emite evento para que quem usar este form possa recarregar a lista
+        // Emite evento para recarregar a lista
         this.$emit('refresh-list');
         this.clearForm();
+
       } catch (error) {
         console.error('Erro ao enviar Pessoa:', error);
-        alert(
-          'Falha ao enviar Pessoa. Verifique se o backend está rodando e se o modelo está correto.'
-        );
+
+        Swal.fire({
+          icon: 'error',
+          title: 'Ops...',
+          text: 'Falha ao enviar Pessoa. Verifique se o backend está rodando e se o modelo está correto.',
+        });
       }
     },
   },
@@ -130,14 +175,27 @@ export default defineComponent({
 </script>
 
 <style scoped>
+/* Animação fade-in */
+@keyframes fadeInForm {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Container principal do formulário */
 .person-form-card {
-  max-width: 600px;
+  max-width: 1000px;
   margin: 0 auto 30px;
   background-color: #f7f9fa;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   padding: 24px;
+  animation: fadeInForm 0.4s ease-in-out;
 }
 
 .person-form-card h2 {
@@ -148,39 +206,54 @@ export default defineComponent({
   letter-spacing: 0.5px;
 }
 
+/* Agrupamento dos campos */
 .form-group {
   margin-bottom: 16px;
   display: flex;
   flex-direction: column;
 }
 
+/* Rótulos */
 .form-group label {
   font-weight: 600;
   margin-bottom: 6px;
   color: #444;
 }
 
+/* Campos de texto e textarea */
 .form-group input[type='text'],
 .form-group input[type='number'],
 .form-group textarea {
+  background-color: #fff;
+  color: #333;
   border: 1px solid #ccc;
   border-radius: 4px;
   padding: 10px;
   font-size: 1rem;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, background-color 0.2s;
 }
 
+/* Placeholder com cor mais clara */
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #999;
+}
+
+/* Foco no campo */
 .form-group input:focus,
 .form-group textarea:focus {
   border-color: #007bff;
   outline: none;
+  background-color: #fefefe;
 }
 
+/* Tamanho mínimo da textarea e redimensionamento vertical */
 textarea {
   resize: vertical;
   min-height: 100px;
 }
 
+/* Botões */
 .buttons {
   display: flex;
   gap: 12px;
@@ -194,24 +267,37 @@ textarea {
   padding: 10px 18px;
   font-size: 1rem;
   cursor: pointer;
-  transition: background-color 0.2s, transform 0.2s;
+  transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
 }
 
+/* Hover e active */
 .btn:hover {
   opacity: 0.9;
 }
-
 .btn:active {
   transform: scale(0.97);
 }
 
+/* Botão principal (Criar/Atualizar) */
 .btn.primary {
   background-color: #007bff;
   color: #fff;
 }
 
+/* Botão secundário (Limpar) */
 .btn.secondary {
   background-color: #868e96;
   color: #fff;
+}
+
+/* Responsividade básica */
+@media (max-width: 600px) {
+  .person-form-card {
+    padding: 16px;
+  }
+  .btn {
+    padding: 8px 14px;
+    font-size: 0.9rem;
+  }
 }
 </style>
