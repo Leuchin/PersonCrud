@@ -21,7 +21,6 @@
                     <td>
                         <button class="btn info" @click="editPerson(Person)">Editar</button>
                         <button class="btn danger" @click="deletePerson(Person.id)">Deletar</button>
-                        <button class= "btn warning" @click = "renewPerson(Person.id)">Renovar</button>
                     </td>
                 </tr>
             </tbody>
@@ -47,7 +46,7 @@ export default defineComponent({
         methods: {
         async fetchPersons() {
             try {
-                const response = await api.get('/person');
+                const response = await api.get('/persons');
                 this.Persons = response.data;
             } catch (error) {
                 console.error(error);
@@ -56,16 +55,7 @@ export default defineComponent({
         async deletePerson(id?: number) {
             if(!id) return;
             try{
-                await api.delete(`/person/${id}`);
-                this.fetchPersons();
-            } catch (error) {
-                console.error(error);
-            }
-        },
-        async renewPerson(id?: number) {
-            if(!id) return;
-            try{
-                await api.put(`/person/${id}/renew`);
+                await api.delete(`/persons/${id}`);
                 this.fetchPersons();
             } catch (error) {
                 console.error(error);
