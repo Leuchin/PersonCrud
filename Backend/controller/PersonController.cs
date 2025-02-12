@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Person.data;
 using Person.Models;
 
@@ -8,48 +7,47 @@ namespace Person.controller
 {
     [ApiController]
     [Route("api/[controller]")]
-    
-    public class PersonController : ControllerBase
+    public class PersonsController : ControllerBase
     {
         private readonly PersonContext _context;
-        public PersonController(PersonContext context)
+
+        public PersonsController(PersonContext context)
         {
             _context = context;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PersonModel>>> GetPerson()
+        public async Task<ActionResult<IEnumerable<PersonModel>>> GetAll()
         {
             var persons = await _context.Persons.ToListAsync();
             return Ok(persons);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<PersonModel>> GetPerson(Guid id)
+        public async Task<ActionResult<PersonModel>> GetById(Guid id)
         {
             var person = await _context.Persons.FindAsync(id);
-
             if (person == null)
             {
                 return NotFound();
             }
-
             return person;
         }
+
         [HttpPost]
         public async Task<ActionResult<PersonModel>> CreatePerson([FromBody] PersonModel person)
         {
             _context.Persons.Add(person);
             await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetPerson", new { id = person.Id }, person);
+            return CreatedAtAction(nameof(GetById), new { id = person.Id }, person);
         }
+
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdatePerson(Guid id, [FromBody] PersonModel UpdatePerson)
+        public async Task<IActionResult> UpdatePerson(Guid id, [FromBody] PersonModel updatePerson)
         {
-            if (id != UpdatePerson.Id)
+            if (id != updatePerson.Id)
             {
-                return BadRequest("Id não encontrada");
+                return BadRequest("Id do parâmetro não confere com o corpo da requisição.");
             }
 
             var existingPerson = await _context.Persons.FindAsync(id);
@@ -57,9 +55,10 @@ namespace Person.controller
             {
                 return NotFound();
             }
-            existingPerson.Name = UpdatePerson.Name;    
-            existingPerson.Age = UpdatePerson.Age;
-            existingPerson.Biography = UpdatePerson.Biography;
+
+            existingPerson.Name = updatePerson.Name;
+            existingPerson.Age = updatePerson.Age;
+            existingPerson.Biography = updatePerson.Biography;
 
             try
             {
@@ -67,21 +66,16 @@ namespace Person.controller
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!PersonExists(id))
-                {
+                if (!_context.Persons.Any(e => e.Id == id))
                     return NotFound();
-                }
                 else
-                {
                     throw;
-                }
             }
-
             return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<PersonModel>> DeletePerson(Guid id)
+        public async Task<IActionResult> DeletePerson(Guid id)
         {
             var person = await _context.Persons.FindAsync(id);
             if (person == null)
@@ -91,13 +85,7 @@ namespace Person.controller
 
             _context.Persons.Remove(person);
             await _context.SaveChangesAsync();
-
             return NoContent();
         }
-        private bool PersonExists(Guid id)
-        {
-            return _context.Persons.Any(e => e.Id == id);
-        }
     }
-
 }
