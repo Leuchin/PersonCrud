@@ -1,14 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using Person.Models;
+namespace Person.data;
 
-namespace Person.data
+public class PersonContext : DbContext
 {
-    public class PersonContext : DbContext
+    public PersonContext(DbContextOptions<PersonContext> options) : base(options)
     {
-        public PersonContext(DbContextOptions<PersonContext> options) : base(options)
-        {
-        }
-
-        public DbSet<PersonModel> Persons => Set<PersonModel>();
     }
+    //Criação de uma tabela chamada Persons
+    public DbSet<PersonModel> Persons { get; set; }
 }

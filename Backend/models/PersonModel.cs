@@ -1,10 +1,9 @@
-namespace Person.Models
+namespace Person.Models;
+
+public class PersonModel
 {
-    public class PersonModel
-    {
-        public Guid Id { get; set; }
-        public string Name { get; set; } = default!;
-        public int Age { get; set; }
-        public string Biography { get; set; } = default!;
-    }
+    public Guid Id { get; init; }
+    public string Name { get; set; } = string.Empty;
+    public int Age { get; set; } = 0;
+    public string Biography { get; set; } = string.Empty;
 }
