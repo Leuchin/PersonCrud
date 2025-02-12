@@ -52,14 +52,14 @@ import { defineComponent, PropType, watch } from 'vue';
 import api from '../services/api.ts';
 import type { PersonItem } from '../models/PersonItem.ts';
 
-// Importa o SweetAlert2
+
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 
 export default defineComponent({
   name: 'PersonForm',
   props: {
-    // Recebe a pessoa a editar, se houver
+    
     personToEdit: {
       type: Object as PropType<PersonItem | null>,
       default: null,
@@ -77,7 +77,6 @@ export default defineComponent({
     };
   },
   watch: {
-    // Se 'personToEdit' vier com um id, entramos em modo edição
     personToEdit: {
       immediate: true,
       handler(newVal: PersonItem | null) {
@@ -102,33 +101,31 @@ export default defineComponent({
     },
 
     async handleSubmit() {
-      // Define se é criação ou edição
       const operation = this.isEditMode ? 'editar' : 'criar';
       const confirmText = this.isEditMode ? 'Sim, atualizar!' : 'Sim, criar!';
 
-      // Pede confirmação com SweetAlert2
       const result = await Swal.fire({
         title: `Confirmar ${operation}?`,
         text: `Deseja realmente ${operation} esta pessoa?`,
         icon: 'question',
         showCancelButton: true,
-        confirmButtonColor: '#007bff',  // Azul
-        cancelButtonColor: '#868e96',   // Cinza
+        confirmButtonColor: '#007bff',  
+        cancelButtonColor: '#868e96',   
         confirmButtonText: confirmText,
         cancelButtonText: 'Cancelar',
       });
 
       if (!result.isConfirmed) {
-        // Usuário cancelou
+        
         return;
       }
 
       try {
         if (this.isEditMode && this.personData.id) {
-          // PUT: atualizar
+        
           await api.put(`/persons/${this.personData.id}`, this.personData);
 
-          // Alerta de sucesso
+        
           Swal.fire({
             icon: 'success',
             title: 'Sucesso!',
@@ -138,11 +135,11 @@ export default defineComponent({
             showConfirmButton: false,
           });
         } else {
-          // POST: criar nova
+       
           const nowUtcIso = new Date().toISOString();
           const newPerson = {
             ...this.personData,
-            timerStart: nowUtcIso, // se precisar de data
+            timerStart: nowUtcIso, 
           };
           await api.post('/persons', newPerson);
 
@@ -156,7 +153,7 @@ export default defineComponent({
           });
         }
 
-        // Emite evento para recarregar a lista
+        
         this.$emit('refresh-list');
         this.clearForm();
 
@@ -175,7 +172,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-/* Animação fade-in */
 @keyframes fadeInForm {
   0% {
     opacity: 0;
@@ -186,8 +182,6 @@ export default defineComponent({
     transform: translateY(0);
   }
 }
-
-/* Container principal do formulário */
 .person-form-card {
   max-width: 1000px;
   margin: 0 auto 30px;
@@ -206,21 +200,18 @@ export default defineComponent({
   letter-spacing: 0.5px;
 }
 
-/* Agrupamento dos campos */
 .form-group {
   margin-bottom: 16px;
   display: flex;
   flex-direction: column;
 }
 
-/* Rótulos */
 .form-group label {
   font-weight: 600;
   margin-bottom: 6px;
   color: #444;
 }
 
-/* Campos de texto e textarea */
 .form-group input[type='text'],
 .form-group input[type='number'],
 .form-group textarea {
@@ -233,13 +224,11 @@ export default defineComponent({
   transition: border-color 0.2s, background-color 0.2s;
 }
 
-/* Placeholder com cor mais clara */
 .form-group input::placeholder,
 .form-group textarea::placeholder {
   color: #999;
 }
 
-/* Foco no campo */
 .form-group input:focus,
 .form-group textarea:focus {
   border-color: #007bff;
@@ -247,13 +236,11 @@ export default defineComponent({
   background-color: #fefefe;
 }
 
-/* Tamanho mínimo da textarea e redimensionamento vertical */
 textarea {
   resize: vertical;
   min-height: 100px;
 }
 
-/* Botões */
 .buttons {
   display: flex;
   gap: 12px;
@@ -270,7 +257,6 @@ textarea {
   transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
 }
 
-/* Hover e active */
 .btn:hover {
   opacity: 0.9;
 }
@@ -278,19 +264,17 @@ textarea {
   transform: scale(0.97);
 }
 
-/* Botão principal (Criar/Atualizar) */
 .btn.primary {
   background-color: #007bff;
   color: #fff;
 }
 
-/* Botão secundário (Limpar) */
 .btn.secondary {
   background-color: #868e96;
   color: #fff;
 }
 
-/* Responsividade básica */
+
 @media (max-width: 600px) {
   .person-form-card {
     padding: 16px;
