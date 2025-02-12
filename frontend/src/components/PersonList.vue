@@ -33,31 +33,32 @@
             <div class="content">
                 <h3>Edição de Pessoa</h3>
 
-                <div class="form-group">
-                    <label>Nome</label>
-                    <input type="text" 
-                    v-model="editData.name"
-                    placeholder="Nome da Pessoa"/>
-                </div>
+                    <div class="form-group">
+                        <label>Nome</label>
+                        <input type="text" 
+                        v-model="editData.name"
+                        placeholder="Nome da Pessoa"/>
+                    </div>
 
-                <div class="form-group">
-                    <label>Idade</label>
-                    <input type="number" 
-                    v-model="editData.age"
-                    placeholder="Idade da Pessoa"/>
-                </div>
+                    <div class="form-group">
+                        <label>Idade</label>
+                        <input type="number" 
+                        v-model="editData.age"
+                        placeholder="Idade da Pessoa"/>
+                    </div>
 
-                <div class="form-group">
-                    <label>Biografia</label>
-                    <textarea type="biography"
-                        v-model="editData.biography"
-                        placeholder="Biografia da Pessoa">
-                    </textarea>
-                </div>
+                    <div class="form-group">
+                        <label>Biografia</label>
+                        <textarea type="biography"
+                            v-model="editData.biography"
+                            placeholder="Biografia da Pessoa">
+                        </textarea>
+                    </div>
 
-                <div class="edit-buttons">
-                    <button class="btn info" @click="confirmEdit()">Atualizar</button>
-                    <button class="btn warning" @click="closeEdit()">Cancelar</button>
+                    <div class="edit-buttons">
+                        <button class="btn info" @click="confirmEdit()">Atualizar</button>
+                        <button class="btn warning" @click="closeEdit()">Cancelar</button>
+                </div>
             </div>
         </div>
     </transition>
@@ -126,6 +127,7 @@ export default defineComponent({
             }
             try {
                 await api.put(`/persons/${this.editData.id}`, this.editData);
+                Swal.fire('Sucesso', 'Pessoa atualizada com sucesso!', 'success');
                 this.fetchPersons();
                 this.closeEdit();
             } catch (error) {
@@ -143,11 +145,18 @@ export default defineComponent({
         async confirmDelete() {
             try {
                 await api.delete(`/persons/${this.selectedPerson?.id}`);
+                Swal.fire(
+                    'Sucesso', 
+                    'A pessoa "${this.selectedPerson.Name}" foi excluida',
+                    'success');
                 this.fetchPersons();
                 this.closeDelete();
             } catch (error) {
                 console.error(error);
-                Swal.fire('Erro', 'Erro ao excluir pessoa', 'error');
+                Swal.fire(
+                    'Erro', 
+                    'Erro ao excluir pessoa', 
+                    'error');
             }
         },
     },
