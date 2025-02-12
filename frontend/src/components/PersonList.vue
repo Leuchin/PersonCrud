@@ -19,20 +19,69 @@
                     <!--Botões de edit, delete e Atualizar
                     -->
                     <td>
-                        <button class="btn info" @click="editPerson(Person)">Editar</button>
-                        <button class="btn danger" @click="deletePerson(Person.id)">Deletar</button>
+                        <button class="btn info" @click="openEdit(Person)">Editar</button>
+                        <button class="btn danger" @click="openDelete(Person)">Deletar</button>
                     </td>
                 </tr>
             </tbody>
         </table>
     </div>
+
+    <!--Transition de Edição-->
+    <transition name="fade">
+        <div class="overlay" v-if="showEdit">
+            <div class="content">
+                <h3>Edição de Pessoa</h3>
+
+                <div class="form-group">
+                    <label>Nome</label>
+                    <input type="text" 
+                    v-model="editData.name"
+                    placeholder="Nome da Pessoa"/>
+                </div>
+
+                <div class="form-group">
+                    <label>Idade</label>
+                    <input type="number" 
+                    v-model="editData.age"
+                    placeholder="Idade da Pessoa"/>
+                </div>
+
+                <div class="form-group">
+                    <label>Biografia</label>
+                    <textarea type="biography"
+                        v-model="editData.biography"
+                        placeholder="Biografia da Pessoa">
+                    </textarea>
+                </div>
+
+                <div class="edit-buttons">
+                    <button class="btn info" @click="confirmEdit()">Atualizar</button>
+                    <button class="btn warning" @click="closeEdit()">Cancelar</button>
+            </div>
+        </div>
+    </transition>
+
+    <!--Transition Exclusão-->
+    <transition name="fade">
+        <div class="overlay" v-if="showDelete">
+            <div class="content">
+                <h3>Confirmação de Exclusão</h3>
+                <p>Deseja realmente <strong>excluir {{ selectedPerson?.name }}</strong></p>
+                <button class="btn danger" @click="confirmDelete()">Sim</button>
+                <button class="btn warning" @click="closeDelete()">Não</button>
+            </div>
+        </div>
+    </transition>
 </template>
+
 
 <!-- Script em Typescript-->
 <script lang="ts">
 import { defineComponent } from 'vue';
 import api from '../services/api.ts';
 import type { PersonItem } from '../models/PersonItem.ts';
+import Swal from 'sweetalert2';
 
 export default defineComponent({
     name: 'PersonList',
@@ -41,6 +90,16 @@ export default defineComponent({
         return {
             Persons: [] as PersonItem[],
 
+            showEdit: false,
+            editData: {
+                id: '',
+                name: '',
+                age: 0,
+                biography: '',
+            } as PersonItem,
+
+            showDelete: false,
+            selectedPerson: null as PersonItem | null,
         };
     },
         methods: {
@@ -50,19 +109,46 @@ export default defineComponent({
                 this.Persons = response.data;
             } catch (error) {
                 console.error(error);
+                Swal.fire('Erro', 'Erro ao buscar pessoas', 'error');
             }
         },
-        async deletePerson(id?: number) {
-            if(!id) return;
-            try{
-                await api.delete(`/persons/${id}`);
+        openEdit(person: PersonItem) {
+            this.editData = { ...person };
+            this.showEdit = true;
+        },
+        closeEdit() {
+            this.showEdit = false;
+        },
+        async confirmEdit() {
+            if (!this.editData.name || !this.editData.age || !this.editData.biography) {
+                Swal.fire('Erro', 'Preencha todos os campos', 'error');
+                return;
+            }
+            try {
+                await api.put(`/persons/${this.editData.id}`, this.editData);
                 this.fetchPersons();
+                this.closeEdit();
             } catch (error) {
                 console.error(error);
+                Swal.fire('Erro', 'Erro ao atualizar pessoa', 'error');
             }
         },
-        editPerson(Person: PersonItem) {
-            this.$emit('edit', Person);
+        openDelete(person: PersonItem) {
+            this.selectedPerson = person;
+            this.showDelete = true;
+        },
+        closeDelete() {
+            this.showDelete = false;
+        },
+        async confirmDelete() {
+            try {
+                await api.delete(`/persons/${this.selectedPerson?.id}`);
+                this.fetchPersons();
+                this.closeDelete();
+            } catch (error) {
+                console.error(error);
+                Swal.fire('Erro', 'Erro ao excluir pessoa', 'error');
+            }
         },
     },
     mounted() {
