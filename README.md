@@ -6,16 +6,20 @@ Podendo atualizar e apagar.
 ## Backend
 
 Feito em .Net 9, usando Entity Framework core e também SQLite.
+O uso do SQLite é para não ter a necessidade de um servidor.
+Diferente do SQL comum o SQLite é mais compacto e não tem necessidade de um servidor.
+Sendo mais fácil de rodar sem a necessidade de adicionais.
 
 ## Frontend
 
-Feito em Vue 3 + Typescript + Vite.
+Feito em Vue 3 + Typescript com o vite.
 
 ### Pré-Requisitos para teste
 
 .Net 9,
 Node.js 22
 Npm
+
 ## Para utilizar o CRUD e testa-lo
 
 O Crud precisará de 2 terminais para rodar o frontend e o backend;
