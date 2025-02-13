@@ -1,13 +1,22 @@
 <template>
   <!--Navbar-->
-  <Navbar />
+  <Navbar/>
+
+  
+
 
   <!--Container-->
   <div id="app">
-    <h1>Lista de pessoas</h1>
+    <div class="navigation">
+      <navigation/>
+    </div>
+    <div class="content">
+      <router-view/>
+
+      <h1>Lista de pessoas</h1>
 
     <PersonForm
-      :personToEdit="personBeingEdited"
+    :personToEdit="personBeingEdited"
      @refresh-list="refreshPersonList"
     />
 
@@ -15,23 +24,27 @@
       ref="personList"
       @edit-person="onEditPerson"
     />
-  </div>
 
+    </div>
+
+  </div>
+  
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-
-import Navbar from './components/Navbar.vue';
+import Navbar from './components/navbar.vue';
 import PersonForm from './components/PersonForm.vue';
 import PersonList from './components/PersonList.vue';
 import type { PersonItem } from './models/PersonItem.ts';
+import navigation from './components/Navigation.vue';
 
 export default defineComponent({
   name: 'App',
   components: {
     Navbar,
     PersonForm,
+    navigation,
     PersonList
   },
   setup() {
@@ -59,5 +72,22 @@ export default defineComponent({
 </script>
 
 <style>
-
+div #app{
+  width:100%;
+  height: 100vh;
+  color:antiquewhite;
+  display: flex;
+}
+div .navigation{
+  display: flex;
+  width: 3px;
+  flex: 1 1 0;
+  padding: 6rem;
+}
+div .content{
+  margin:8px;
+  display: inline-block;
+  border: 0.1px solid antiquewhite;
+  border-radius: 25px;
+}
 </style>

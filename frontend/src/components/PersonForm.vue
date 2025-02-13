@@ -147,7 +147,7 @@ export default defineComponent({
 
 <style scoped>
 .Person-Container {
-  border: 1px solid #272424;
+  border: 1px solid antiquewhite;
   border-radius: 5px;
   padding: 16px 20px;
   margin-bottom: 30px;

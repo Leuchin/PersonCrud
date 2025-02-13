@@ -10,7 +10,9 @@
   },
   "dependencies": {
     "sweetalert2": "^11.16.0",
-    "vue": "^3.5.13"
+    "vue": "^3.5.13",
+    "vue-route": "^1.5.1",
+    "vue-router": "^4.5.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.1",
