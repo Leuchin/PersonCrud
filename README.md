@@ -16,6 +16,13 @@ Feito em Vue 3 + Typescript + Vite.
 .Net 9,
 Node.js 22
 Npm
+## Para utilizar o CRUD e testa-lo
+
+O Crud precisará de 2 terminais para rodar o frontend e o backend;
+Inicialmente no terminal 1, na pasta PersonCRUD use o comando "npm install".
+Após no terminal 1 use "cd frontend" e usar o comando "npm install".
+No terminal 2 use "cd backend" e usar o comando "npm install".
+No terminal 1 para rodar use "npm run dev", e no terminal 2 use "dotnet run".
 
 # Vue 3 + TypeScript + Vite
 
