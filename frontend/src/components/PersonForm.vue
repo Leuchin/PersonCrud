@@ -48,6 +48,9 @@
 import { defineComponent, type PropType } from 'vue';
 import api from '../services/api.ts';
 import type { PersonItem } from '../models/PersonItem.ts';
+import Swal from 'sweetalert2';
+
+
 
 export default defineComponent({
   name: 'PersonForm',
@@ -95,28 +98,47 @@ export default defineComponent({
     async handleSubmit() {
       try {
         if (this.isEditMode && this.PersonData.id) {
-          // PUT: atualizar tarefa
+          // PUT
           await api.put(`/persons/${this.PersonData.id}`, this.PersonData);
-          alert('Atualização de Pessoa realizada com sucesso!');
+
+          Swal.fire({
+            title: 'Sucesso',
+            text: 'Pessoa atualizada com sucesso!',
+            icon: 'success',
+            timer: 1500,
+            timerProgressBar: true,
+            showConfirmButton: false,
+          });
+          
         } else {
-          // POST: criar nova tarefa
-          // -> TimerStart em UTC (com 'Z')
-          const nowUtcIso = new Date().toISOString();
+          // POST
 
           const newPerson = {
             ...this.PersonData,
-            timerStart: nowUtcIso
           };
 
           await api.post('/persons', newPerson);
-          alert('Criação de Pessoa com sucesso!');
+          Swal.fire({
+            title: 'Sucesso',
+            text: 'Pessoa criada com sucesso!',
+            icon: 'success',
+            timer: 1500,
+            timerProgressBar: true,
+            showConfirmButton: false,
+          });
+          this.$emit('refresh-list');
+          this.clearForm();
         }
 
         this.$emit('refresh-list');
         this.clearForm();
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
+
       } catch (error) {
         console.error('Erro ao enviar Pessoa:', error);
-        alert('Falha ao enviar Pessoa. Verifique se o backend está rodando e se o modelo está correto.');
+        Swal.fire('Erro', 'Erro ao enviar Pessoa verifique se o backend está ligado', 'error'); 
       }
     },
   },
@@ -186,7 +208,7 @@ h2 {
 
 .btn.secondary {
   background-color: #f2f2f2;
-  color: #333;
+  color: #413c3c;
 }
 
 .btn.secondary:hover {

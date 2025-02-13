@@ -7,6 +7,7 @@
                     <th>Nome</th>
                     <th>Idade</th>
                     <th>Biografia</th>
+                    <th>Ações</th>
                 </tr>
             </thead>
             <tbody>
@@ -147,7 +148,7 @@ export default defineComponent({
                 await api.delete(`/persons/${this.selectedPerson?.id}`);
                 Swal.fire(
                     'Sucesso', 
-                    'A pessoa "${this.selectedPerson.Name}" foi excluida',
+                    `A pessoa "${this.selectedPerson?.name}" foi excluída com sucesso.`,
                     'success');
                 this.fetchPersons();
                 this.closeDelete();
@@ -169,9 +170,30 @@ export default defineComponent({
 
 <!-- Estilização em CSS-->'
 <style scoped>
+@keyframes fadeIn 
+{
+    0%{
+        opacity: 0%;
+        transform: translate(10px);
+    }    
+    100%{
+        opacity: 100%;
+        transform: translate(0px);
+    }
+}
+
+.fade-enter-active, 
+.fade-leave-active {
+    transition: opacity 0.5s;
+}
+.fade-enter,
+.fade-leave-to{
+    opacity: 0;
+}
+
 .Person-List-Container {
-    background-color: antiquewhite;
-    border: 1px solid #242222;
+    background-color: #242222;
+    border: 1px solid antiquewhite;
     border-radius: 5px;
     padding: 16px 18px;
     margin-bottom: 30px;  
@@ -180,7 +202,7 @@ export default defineComponent({
 h2{
     margin-bottom: 20px;
     font-size:1.2rem;
-    color: #242222;
+    color: antiquewhite;
 }
 
 table{
@@ -190,16 +212,17 @@ table{
 }
 
 th, td{
-    border: 1px solid #242222;
+    border: 1px solid antiquewhite;
     padding: 8px;
-    border-bottom: 1px solid #242222;
+    border-bottom: 1px solid antiquewhite;
 }
 
 th{
-    background-color: #242222;
-    color: #fff;
+    background-color: antiquewhite;
+    color: #242222;
     border: none;
 }
+
 .btn {
   border: none;
   border-radius: 4px;
@@ -232,4 +255,58 @@ th{
 .btn.warning:hover {
   background-color: #e0a800;
 }
+.overlay{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+.content{
+    background-color: #242222;
+    border: 1px solid antiquewhite;
+    border-radius: 5px;
+    padding: 16px 18px;
+    width: 300px;
+    animation: fadeIn 0.5s;
+}
+.content h3{
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+    color: antiquewhite;
+}
+.form-group{
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}   
+.form-group label{
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: antiquewhite;
+}   
+.form-group input[type="text"],
+.form-group textarea{
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px;
+    font-size: 0.95rem;
+}
+.form-group input[type="number"]{
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px;
+    font-size: 0.95rem;
+}
+.edit-buttons{
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
 </style>
