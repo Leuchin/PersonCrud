@@ -98,7 +98,7 @@ export default defineComponent({
                 name: '',
                 age: 0,
                 biography: '',
-            } as PersonItem,
+            } as unknown as PersonItem,
 
             showDelete: false,
             selectedPerson: null as PersonItem | null,

@@ -1,9 +1,15 @@
 <template>
-    <div>
-      <h1>Sobre</h1>
-      <p>Esta é a página Sobre do CRUD.</p>
+    <div id="list">
+        <navigation/>
+        <PersonList
+            ref="personList"
+      />
     </div>
 </template>
 
 <script setup lang="ts">
+
+import navigation from '../components/Navigation.vue';
+import PersonList from '../components/PersonList.vue';
+
 </script>
