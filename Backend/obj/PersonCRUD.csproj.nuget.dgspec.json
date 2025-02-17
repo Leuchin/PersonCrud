@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\leuch\\OneDrive\\Documentos\\tutorial crud\\PersonCrud\\backend\\PersonCRUD.csproj": {}
+    "C:\\Users\\leuch\\OneDrive\\Documentos\\tutorial crud\\PersonCrud\\Backend\\PersonCRUD.csproj": {}
   },
   "projects": {
-    "C:\\Users\\leuch\\OneDrive\\Documentos\\tutorial crud\\PersonCrud\\backend\\PersonCRUD.csproj": {
+    "C:\\Users\\leuch\\OneDrive\\Documentos\\tutorial crud\\PersonCrud\\Backend\\PersonCRUD.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\leuch\\OneDrive\\Documentos\\tutorial crud\\PersonCrud\\backend\\PersonCRUD.csproj",
+        "projectUniqueName": "C:\\Users\\leuch\\OneDrive\\Documentos\\tutorial crud\\PersonCrud\\Backend\\PersonCRUD.csproj",
         "projectName": "PersonCRUD",
-        "projectPath": "C:\\Users\\leuch\\OneDrive\\Documentos\\tutorial crud\\PersonCrud\\backend\\PersonCRUD.csproj",
+        "projectPath": "C:\\Users\\leuch\\OneDrive\\Documentos\\tutorial crud\\PersonCrud\\Backend\\PersonCRUD.csproj",
         "packagesPath": "C:\\Users\\leuch\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\leuch\\OneDrive\\Documentos\\tutorial crud\\PersonCrud\\backend\\obj\\",
+        "outputPath": "C:\\Users\\leuch\\OneDrive\\Documentos\\tutorial crud\\PersonCrud\\Backend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\leuch\\AppData\\Roaming\\NuGet\\NuGet.Config"
